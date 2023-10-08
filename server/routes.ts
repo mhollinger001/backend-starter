@@ -146,6 +146,11 @@ class Routes {
   async getCommentsByUsername(username: string) {
     return await Comment.getCommentsByAuthor(username);
   }
+
+  @Router.post("/comments")
+  async createComment(username: string, content: string) {
+    return await Comment.create(username, content);
+  }
 }
 
 export default getExpressRouter(new Routes());

@@ -18,6 +18,12 @@ const operations: operation[] = [
     fields: {},
   },
   {
+    name: "Create Comment",
+    endpoint: "api/comments",
+    method: "POST",
+    fields: { username: "input", content: "input" },
+  },
+  {
     name: "Get Session User (logged in user)",
     endpoint: "/api/session",
     method: "GET",
