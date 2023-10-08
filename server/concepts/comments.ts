@@ -33,6 +33,11 @@ export default class CommentConcept {
     return comments;
   }
 
+  async getComments() {
+    const comments = await this.comments.readMany({});
+    return comments;
+  }
+
   async getRepliesFromId(_id: ObjectId) {
     return await this.comments.readMany({ parentId: _id});
   }

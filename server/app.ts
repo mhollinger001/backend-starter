@@ -1,3 +1,5 @@
+import CommentConcept from "./concepts/comments";
+import ExerciseConcept from "./concepts/exercise";
 import FriendConcept from "./concepts/friend";
 import PostConcept from "./concepts/post";
 import UserConcept from "./concepts/user";
@@ -8,3 +10,5 @@ export const WebSession = new WebSessionConcept();
 export const User = new UserConcept();
 export const Post = new PostConcept();
 export const Friend = new FriendConcept();
+export const Comment = new CommentConcept();
+export const Exercise = new ExerciseConcept();

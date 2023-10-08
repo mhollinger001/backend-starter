@@ -10,7 +10,13 @@ type operation = {
   fields: Fields;
 };
 
-const operations: operation[] = [
+const operations: operation[] = [ 
+  {
+    name: "Get Comments",
+    endpoint: "api/comments",
+    method: "GET",
+    fields: {},
+  },
   {
     name: "Get Session User (logged in user)",
     endpoint: "/api/session",
