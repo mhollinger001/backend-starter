@@ -1,8 +1,9 @@
 import { ObjectId } from "mongodb";
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotFoundError } from "./errors";
+import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface LessonDoc extends BaseDoc {
+    author: ObjectId;
     title: string;
     subLessons: ObjectId[];
 }
@@ -10,8 +11,8 @@ export interface LessonDoc extends BaseDoc {
 export default class LessonConcept {
     public readonly lessons = new DocCollection<LessonDoc>("lessons");
 
-    async create(title: string, subLessons: ObjectId[]) {
-        const _id = await this.lessons.createOne({ title, subLessons });
+    async create(author: ObjectId, title: string, subLessons: ObjectId[]) {
+        const _id = await this.lessons.createOne({ author, title, subLessons });
         return { msg: "Lesson Created!", lesson: await this.lessons.readOne({ _id }) };
     }
 
@@ -35,6 +36,13 @@ export default class LessonConcept {
         const lesson = await this.getLessonById(_id);
         const subLessons = lesson.subLessons.filter((value) => !subLessonsToRemove.has(value));
         return this.update(_id, { subLessons });
+    }
+
+    async isAuthor(author: ObjectId, _id: ObjectId) {
+        const lesson = await this.getLessonById(_id);
+        if (lesson.author.toString() !== author.toString()) {
+            throw new NotAllowedError(`Unauthorized Change`);
+        }
     }
 
     async update(_id: ObjectId, update: Partial<LessonDoc>) {

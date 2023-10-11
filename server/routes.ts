@@ -237,22 +237,29 @@ class Routes {
   }
 
   @Router.post("/lesson")
-  async createLesson(title: string) {
-    return await Lesson.create(title, []);
+  async createLesson(session: WebSessionDoc, title: string) {
+    const user = WebSession.getUser(session);
+    return await Lesson.create(user, title, []);
   }
 
   @Router.patch("/lesson/add/:_id")
-  async addToLesson(_id: ObjectId, subLesson: ObjectId, location: number = -1) {
+  async addToLesson(session: WebSessionDoc, _id: ObjectId, subLesson: ObjectId, location: number = -1) {
+    const user = WebSession.getUser(session);
+    await Lesson.isAuthor(user, _id);
     return await Lesson.addSubLessons(_id, [subLesson], location);
   } 
   
   @Router.patch("/lesson/remove/:_id")
-  async removeFromLesson(_id: ObjectId, subLesson: ObjectId) {
+  async removeFromLesson(session: WebSessionDoc, _id: ObjectId, subLesson: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Lesson.isAuthor(user, _id);
     return await Lesson.removeSubLessons(_id, new Set([subLesson]))
   } 
 
   @Router.delete("/lesson")
-  async deleteLesson(_id: ObjectId) {
+  async deleteLesson(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Lesson.isAuthor(user, _id);
     return await Lesson.delete(_id);
   }
 }
