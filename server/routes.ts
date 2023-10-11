@@ -2,9 +2,11 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Comment, Friend, Post, User, WebSession } from "./app";
+import { Comment, Exercise, Friend, Lesson, Post, Question, User, Video, WebSession } from "./app";
 import { PostDoc, PostOptions } from "./concepts/post";
+import { QuestionDoc } from "./concepts/question";
 import { UserDoc } from "./concepts/user";
+import { VideoDoc } from "./concepts/video";
 import { WebSessionDoc } from "./concepts/websession";
 import Responses from "./responses";
 
@@ -144,12 +146,114 @@ class Routes {
 
   @Router.get("/comments/:username")
   async getCommentsByUsername(username: string) {
-    return await Comment.getCommentsByAuthor(username);
+    const id = (await User.getUserByUsername(username))._id;
+    return await Comment.getCommentsByAuthorId(id);
+  }
+
+  @Router.get("/reply/:_id")
+  async getReplies(_id: ObjectId) {
+    return await Comment.getRepliesFromId(_id);
   }
 
   @Router.post("/comments")
-  async createComment(username: string, content: string) {
-    return await Comment.create(username, content);
+  async createComment(session: WebSessionDoc, content: string, parentId: ObjectId | null) {
+    const user = WebSession.getUser(session);
+    return await Comment.create(user, content, parentId);
+  }
+
+  @Router.delete("/comments")
+  async deleteAllComments() {
+    return await Comment.deleteAll();
+  }
+  
+  @Router.get("/exercise/:_id")
+  async getExercisesByTitle(_id: ObjectId) {
+    return await Exercise.getExerciseById(_id);
+  }
+
+  @Router.post("/exercise")
+  async createExercise(title: string) {
+    return await Exercise.create(title, []);
+  }
+
+  @Router.patch("/exercise/add/:_id")
+  async addToExercise(_id: ObjectId, question: ObjectId, location: number = -1) {
+    return await Exercise.addQuestions(_id, [question], location);
+  } 
+  
+  @Router.patch("/exercise/remove/:_id")
+  async removeFromExercise(_id: ObjectId, question: ObjectId) {
+    return await Exercise.removeQuestions(_id, new Set([question]))
+  } 
+
+  @Router.delete("/exercise")
+  async deleteExercise(_id: ObjectId) {
+    return await Exercise.delete(_id);
+  }
+
+  @Router.get("/question/:_id")
+  async getQuestion(_id: ObjectId) {
+    return await Question.getQuestionById(_id);
+  }
+
+  @Router.post("/question")
+  async createQuestion(question: string, answerType: string, answer: string) {
+    return await Question.create(question, answerType, answer);
+  }
+
+  @Router.patch("/question/:_id")
+  async updateQuestion(_id: ObjectId, update: Partial<QuestionDoc>) {
+    return await Question.update(_id, update);
+  }
+
+  @Router.delete("/question/:_id")
+  async deleteQuestion(_id: ObjectId) {
+    return await Question.delete(_id);
+  }
+
+  @Router.get("/video/:_id")
+  async getVideo(_id: ObjectId) {
+    return await Video.getVideoById(_id);
+  }
+
+  @Router.post("/video")
+  async createVideo(title: string, videoUrl: string) {
+    return await Video.create(title, videoUrl);
+  }
+
+  @Router.patch("/video/:_id")
+  async updateVideo(_id: ObjectId, update: Partial<VideoDoc>) {
+    return await Video.update(_id, update);
+  }
+
+  @Router.delete("/video/:_id")
+  async deleteVideo(_id: ObjectId) {
+    return await Video.delete(_id);
+  }
+
+  @Router.get("/lesson")
+  async getLesson(_id: ObjectId) {
+    return await Lesson.getLessonById(_id);
+  }
+
+  @Router.post("/lesson")
+  async createLesson(title: string) {
+    return await Lesson.create(title, []);
+  }
+
+  @Router.patch("/lesson/add/:_id")
+  async addToLesson(_id: ObjectId, subLesson: ObjectId, location: number = -1) {
+    return await Lesson.addSubLessons(_id, [subLesson], location);
+  } 
+  
+  @Router.patch("/lesson/remove/:_id")
+  async removeFromLesson(_id: ObjectId, subLesson: ObjectId) {
+    return await Lesson.removeSubLessons(_id, new Set([subLesson]))
+  } 
+
+  @Router.delete("/lesson")
+  async deleteLesson(_id: ObjectId) {
+    return await Lesson.delete(_id);
   }
 }
 

@@ -10,18 +10,139 @@ type operation = {
   fields: Fields;
 };
 
-const operations: operation[] = [ 
+const operations: operation[] = [
   {
-    name: "Get Comments",
-    endpoint: "api/comments",
+    name: "Delete Lesson",
+    endpoint: "api/lesson/",
+    method: "DELETE",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Remove Sublesson from Lesson",
+    endpoint: "api/lesson/remove/:_id",
+    method: "PATCH",
+    fields: { _id: "input", subLesson: "input" },
+  },
+  {
+    name: "Add Sublesson To Lesson",
+    endpoint: "api/lesson/add/:_id",
+    method: "PATCH",
+    fields: { _id: "input", subLesson: "input", location: "input" },
+  },
+  {
+    name: "Get Lesson",
+    endpoint: "api/lesson/:_id",
     method: "GET",
-    fields: {},
+    fields: { _id: "input" },
+  },
+  {
+    name: "Create Lesson",
+    endpoint: "api/lesson",
+    method: "POST",
+    fields: { title: "input" },
+  },
+  {
+    name: "Delete Video",
+    endpoint: "api/video/",
+    method: "DELETE",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Update Video",
+    endpoint: "api/video/:_id",
+    method: "PATCH",
+    fields: { _id: "input", update: { title: "input", videoUrl: "input" } },
+  },
+  {
+    name: "Get Video",
+    endpoint: "api/video/:_id",
+    method: "GET",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Create Video",
+    endpoint: "api/video",
+    method: "POST",
+    fields: { title: "input", videoUrl: "input" },
+  },
+  {
+    name: "Delete Exercise",
+    endpoint: "api/exercise/",
+    method: "DELETE",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Remove Question from Exercise",
+    endpoint: "api/exercise/remove/:_id",
+    method: "PATCH",
+    fields: { _id: "input", question: "input" },
+  },
+  {
+    name: "Add Question To Exercise",
+    endpoint: "api/exercise/add/:_id",
+    method: "PATCH",
+    fields: { _id: "input", question: "input", location: "input" },
+  },
+  {
+    name: "Get Exercise",
+    endpoint: "api/exercise/:_id",
+    method: "GET",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Create Exercise",
+    endpoint: "api/exercise",
+    method: "POST",
+    fields: { title: "input" },
+  },
+  
+  {
+    name: "Delete Question",
+    endpoint: "api/question/",
+    method: "DELETE",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Update Question",
+    endpoint: "api/question/:_id",
+    method: "PATCH",
+    fields: { _id: "input", update: { question: "input", answerType: "input", answer: "input" } },
+  },
+  {
+    name: "Get Question",
+    endpoint: "api/question/:_id",
+    method: "GET",
+    fields: { _id: "input" },
+  },
+  {
+    name: "Create Question",
+    endpoint: "api/question",
+    method: "POST",
+    fields: { question: "input", answerType: "input", answer: "input" },
+  },
+  {
+    name: "Get Comments (empty for all)",
+    endpoint: "api/comments/:username",
+    method: "GET",
+    fields: { username: "input" },
+  },
+  {
+    name: "Get Replies To A Comment",
+    endpoint: "api/reply/:_id",
+    method: "GET",
+    fields: { _id: "input" },
   },
   {
     name: "Create Comment",
     endpoint: "api/comments",
     method: "POST",
-    fields: { username: "input", content: "input" },
+    fields: { content: "input", parentId: "input" },
+  },
+  {
+    name: "Delete ALL Comments",
+    endpoint: "api/comments",
+    method: "DELETE",
+    fields: {},
   },
   {
     name: "Get Session User (logged in user)",

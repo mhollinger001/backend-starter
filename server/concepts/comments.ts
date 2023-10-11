@@ -3,7 +3,7 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 import { NotFoundError } from "./errors";
 
 export interface CommentDoc extends BaseDoc {
-  author: string;
+  author: ObjectId;
   content: string;
   likes: number;
   parentId: ObjectId | null;
@@ -12,7 +12,7 @@ export interface CommentDoc extends BaseDoc {
 export default class CommentConcept {
   public readonly comments = new DocCollection<CommentDoc>("comments");
 
-  async create(author: string, content: string, parentId: ObjectId | null = null) {
+  async create(author: ObjectId, content: string, parentId: ObjectId | null = null) {
     const _id = await this.comments.createOne({ author, content, likes: 0, parentId: parentId });
     return { msg: "Comment created successfully!", comment: await this.comments.readOne({ _id }) };
   }
@@ -25,7 +25,7 @@ export default class CommentConcept {
     return comment;
   }
 
-  async getCommentsByAuthor(author: string) {
+  async getCommentsByAuthorId(author: ObjectId) {
     const comments = await this.comments.readMany({ author });
     if (comments === null) {
       throw new NotFoundError(`User has no comments!`);
@@ -65,5 +65,10 @@ export default class CommentConcept {
   async delete(_id: ObjectId) {
     await this.comments.deleteOne({ _id });
     return { msg: "Comment deleted!" };
+  }
+
+  async deleteAll() {
+    await this.comments.deleteMany({});
+    return { msg: "All Comments deleted!"};
   }
 }
